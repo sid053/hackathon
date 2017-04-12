@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var Bear     = require('./MODELS/bear');
 var Dog      = require('./MODELS/dog');
 var Order    = require('./MODELS/order');
-
+var Cat      = require('./MODELS/cat');
 var mongoose   = require('mongoose');
 //mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o');
 mongoose.connect('mongodb://localhost/test')
@@ -97,9 +97,57 @@ router.route('/order')
         });
     });
        
+// router.route('/cat')
+
+//     // create a dog (accessed at POST http://localhost:8080/api/dogs)
+//     .post(function(req, res) {
+        
+//         var cat = new cat();      // create a new instance of the Dog model
+//         cat.name = req.body.name; 
+//      //   dog.type = req.body.type; // set the dogs name (comes from the request)
+              
+        
+//         Cat.save(function(err) {
+//             if (err)
+//                 res.send(err);
+
+//             res.json({ message: 'cat created!' });
+//         });
+        
+//     });
     
 
-// router.route('/dogs')
+
+router.route('/cat1')
+
+    // create a dog (accessed at POST http://localhost:8080/api/dogs)
+    .post(function(req, res) {
+        
+        var cat = new Cat();      // create a new instance of the Dog model
+        cat.name = req.body.name; 
+        // dog.type = req.body.type; // set the dogs name (comes from the request)
+              
+        
+        cat.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'asd created!' });
+        });
+        
+    })
+
+    .get(function(req, res) {
+        Cat.find(function(err, cat1) {
+            if (err)
+                res.send(err);
+
+            res.json(cat1);
+        });
+    });
+
+
+// router.route('/dog')
 
 //     // create a dog (accessed at POST http://localhost:8080/api/dogs)
 //     .post(function(req, res) {
