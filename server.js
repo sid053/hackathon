@@ -7,16 +7,24 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var Bear     = require('./MODELS/bear');
-var Dog      = require('./MODELS/dog');
 var Order    = require('./MODELS/order');
-var Cat      = require('./MODELS/cat');
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/test')
-// configure app to use bodyParser()
-// this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+ res.setHeader('Access-Control-Allow-Origin', '*');
+ res.setHeader('Access-Control-Allow-Credentials', 'true');
+ res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+ res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+//and remove cacheing so we get the most recent comments
+ res.setHeader('Cache-Control', 'no-cache');
+ next();
+});
+
+
+
+
 
 var port = process.env.PORT || 8080;        // set our port
 
@@ -30,16 +38,19 @@ router.route('/order')
 
     .post(function(req, res) {
         
-        var order = new Order();      
-        order.qty = req.body.qty;
+         var order = new Order();
+         order.location = req.body.location ;
+         order.qty  = req.body.qty;
+         order.milk = req.body.milk;
+         order.size = req.body.size;
+         order.name = req.body.name;
 
-        order.name = req.body.name; 
+              console.log(req.body);
+ 
+              console.log(order.qty);
+              console.log(order.milk);
 
-        order.milk = req.body.milk ;
-        order.size = req.body.size ; // set the bears name (comes from the request)
-              //res.json({message : 'i know nothing'});  
-        // save the bear and check for errors
-        order.save(function(err) {
+          order.save(function(err) {
             if (err)
                 res.send(err);
 
