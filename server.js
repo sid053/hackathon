@@ -22,6 +22,7 @@ app.use(function(req, res, next) {
  next();
 });
 
+var STATUS = "";
 
 
 
@@ -31,8 +32,7 @@ var port = process.env.PORT || 8080;        // set our port
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
-
-
+//var order_id;
 
 router.route('/order')
 
@@ -45,17 +45,20 @@ router.route('/order')
          order.size = req.body.size;
          order.name = req.body.name;
 
-              console.log(req.body);
- 
-              console.log(order.qty);
-              console.log(order.milk);
 
           order.save(function(err) {
-            if (err)
+            //order_id =order.id ;
+            if (err){
+                STATUS = "Unsuccessful";
                 res.send(err);
-
-            res.json({ message: 'Order Placed' });
-        });
+            }
+            
+            STATUS = "Successful" ;
+            res.status(200).send(order.id);
+        
+             
+    });
+       //   console.log(order_id);
 
        });
 
@@ -65,9 +68,9 @@ router.route('/order')
        .get(function(req, res) {
         Order.find(function(err, order) {
             if (err)
-                res.send(err);
+                res.status(404).send({message : 'There are no orders'});
 
-            res.json(order);
+            res.status(200).json(order);
         });
     });
        
@@ -77,28 +80,31 @@ router.route('/order/:order_id')
     .get(function(req, res) {
         Order.findById(req.params.order_id, function(err, order) {
             if (err)
-                res.send(err);
-            res.json(order);
+                res.status(404).send({message : 'Order not found'});
+            res.status(200).json(order);
         });
     })
 
 
     .put(function(req, res) {
 
-        // use our bear model to find the bear we want
         Order.findById(req.params.order_id, function(err, order) {
 
             if (err)
-                res.send(err);
+                res.send({message : 'Cannot update the order'});
+         
+           order.location = req.body.location ;
+           order.qty  = req.body.qty;
+           order.milk = req.body.milk;
+           order.size = req.body.size;
+           order.name = req.body.name;
 
-            order.name = req.body.name;  // update the bears info
-
-            // save the bear
+        
             order.save(function(err) {
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'Order updated!' });
+                res.status(200).json({ message: 'Order updated!' });
             });
 
         });
@@ -110,7 +116,7 @@ router.route('/order/:order_id')
             _id: req.params.order_id
         }, function(err, order) {
             if (err)
-                res.send(err);
+                res.send({message : 'cannot delete the order'});
 
             res.json({ message: 'Successfully deleted' });
         });
@@ -124,9 +130,10 @@ router.route('/order/:order_id')
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router);
+
+app.use('/api/sanJose', router);
 
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('Server running on port ' + port);
