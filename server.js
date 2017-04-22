@@ -17,7 +17,7 @@ app.use(function(req, res, next) {
  res.setHeader('Access-Control-Allow-Credentials', 'true');
  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-//and remove cacheing so we get the most recent comments
+
  res.setHeader('Cache-Control', 'no-cache');
  next();
 });
@@ -75,8 +75,6 @@ router.route('/order')
     });
        
 router.route('/order/:order_id')
-
-    // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
         Order.findById(req.params.order_id, function(err, order) {
             if (err)
