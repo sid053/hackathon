@@ -9,7 +9,7 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var Order    = require('./MODELS/order');
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost/test')
+mongoose.connect('mongodb://54.183.242.172/test')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
